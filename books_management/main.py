@@ -26,7 +26,15 @@ search_results = my_library.search_book("author", "Author1")
 print(*search_results)
 
 borrower1 = Borrower("Sandro", "Iashvili", "555555555", "Temqa", "010190724141")
+borrower2 = Borrower("oto", "Iashvili", "555455555", "Temqa", "010190724145")
+
+
+my_library.add_borrowers(borrower2)
+
 my_library.add_borrowers(borrower1)
+
+
+
 my_library.borrower_list()
 my_library.update_borrower_details(borrower1, name="Sandro")
 my_library.borrower_list()
@@ -34,5 +42,5 @@ my_library.borrower_list()
 search_results1 = my_library.search_borrowers("personal_number", "010190724141")
 print(*search_results1)
 transaction1 = my_library.add_transaction(borrower1, book1)
-my_library.transaction_history()
 
+print(transaction1.borrower.personal_number)

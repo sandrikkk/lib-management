@@ -1,7 +1,6 @@
 import csv_handler
 import datetime
 from transaction_managment.transaction_managment import Transaction
-from books_management.books import Book
 
 
 class Library:
@@ -136,9 +135,10 @@ class Library:
             transaction = Transaction(borrower, book)
             self.transactions.append(transaction)
             book.available = False
+            csv_handler.save_transaction_or_update(self)
             return transaction
         else:
-            return f"Book is not available or wrong parameters !"
+            return "Book is not available or wrong parameters !"
 
     def remove_transaction(self, transaction):
         if transaction in self.transactions:
