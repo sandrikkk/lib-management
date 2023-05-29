@@ -5,8 +5,6 @@ class Borrower:
         self.personal_number = personal_number
         self.phone = phone
         self.address = address
-        self.borrowed_books = []
 
     def __repr__(self):
         return f"Borrower-{self.name} {self.last_name}, {self.personal_number}"
-

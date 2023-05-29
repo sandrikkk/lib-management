@@ -1,6 +1,6 @@
-from library import Library
-from books import Book
-from borrower_managment.borower_managment import Borrower
+from books_management.library import Library
+from books_management.books import Book
+from borrower_managment.borower import Borrower
 
 my_library = Library()
 # Add new books
@@ -28,19 +28,15 @@ print(*search_results)
 borrower1 = Borrower("Sandro", "Iashvili", "555555555", "Temqa", "010190724141")
 borrower2 = Borrower("oto", "Iashvili", "555455555", "Temqa", "010190724145")
 
-
 my_library.add_borrowers(borrower2)
 
 my_library.add_borrowers(borrower1)
-
-
 
 my_library.borrower_list()
 my_library.update_borrower_details(borrower1, name="Sandro")
 my_library.borrower_list()
 
 search_results1 = my_library.search_borrowers("personal_number", "010190724141")
-print(*search_results1)
+print(search_results1)
 transaction1 = my_library.add_transaction(borrower1, book1)
-
-print(transaction1.borrower.personal_number)
+transaction2 = my_library.add_transaction(borrower2, book2)

@@ -1,13 +1,15 @@
 import csv
 import os
 
+base_filepath = "/home/user/Desktop/lib-management/csv_file"
+
 
 def save_books_and_write_in_csv(self):
     if not self.books:
         return
 
     fieldnames = ["Title", "Author", "ISBN", "Genre", "available"]
-    book_filepath = "/home/user/Desktop/lib-management/csv_file/books.csv"
+    book_filepath = f"{base_filepath}/books.csv"
 
     with open(book_filepath, mode="w", newline="") as file:
         book_writer = csv.DictWriter(file, fieldnames=fieldnames)
@@ -25,7 +27,7 @@ def save_books_and_write_in_csv(self):
 
 def remove_book_from_csv(rmbook):
     rows = []
-    with open('/home/user/Desktop/lib-management/csv_file/books.csv', 'r') as csvfile:
+    with open(f'{base_filepath}/books.csv', 'r') as csvfile:
         csvreader = csv.reader(csvfile)
         for row in csvreader:
             if row[0] != rmbook.title:
@@ -40,7 +42,7 @@ def save_borrowers_and_write_in_csv(self):
         return
 
     fieldnames = ["name", "last_name", "phone", "address", "personal_number"]
-    book_filepath = "/home/user/Desktop/lib-management/csv_file/borrowers.csv"
+    book_filepath = f"{base_filepath}/borrowers.csv"
 
     with open(book_filepath, mode="w", newline="") as file:
         borrower_writer = csv.DictWriter(file, fieldnames=fieldnames)
@@ -58,12 +60,12 @@ def save_borrowers_and_write_in_csv(self):
 
 def remove_borrower_from_csv(rmborrower):
     rows = []
-    with open('/home/user/Desktop/lib-management/csv_file/borrowers.csv', 'r') as csvfile:
+    with open(f'{base_filepath}/borrowers.csv', 'r') as csvfile:
         csvreader = csv.reader(csvfile)
         for row in csvreader:
             if row[0] != rmborrower.name:
                 rows.append(row)
-    with open('/home/user/Desktop/lib-management/csv_file/borrowers.csv', 'w') as csvfile:
+    with open(f'{base_filepath}/borrowers.csv', 'w') as csvfile:
         csvwriter = csv.writer(csvfile)
         csvwriter.writerows(rows)
 
@@ -73,7 +75,7 @@ def save_transaction_or_update(self):
         return
 
     fieldnames = ["borrower", "book"]
-    transactions_filepath = "/home/user/Desktop/lib-management/csv_file/transactions.csv"
+    transactions_filepath = f"{base_filepath}/transactions.csv"
 
     with open(transactions_filepath, mode="w", newline="") as file:
         transaction_writer = csv.DictWriter(file, fieldnames=fieldnames)

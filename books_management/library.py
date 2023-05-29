@@ -1,6 +1,6 @@
 import csv_handler
 import datetime
-from transaction_managment.transaction_managment import Transaction
+from transaction_managment.transaction import Transaction
 
 
 class Library:
@@ -94,6 +94,7 @@ class Library:
                       f"Last Name: {borrower.last_name}"
                       f"Personal Number: {borrower.personal_number}"
                       )
+        return self.borrowers_users
 
     def update_borrower_details(self, bk, name=None, last_name=None, address=None, number=None, personal_number=None):
         if not self.borrowers_users:
@@ -119,15 +120,13 @@ class Library:
         search_list_borrowers = []
 
         for borrower in self.borrowers_users:
-            if borrower_search_field == 'personal_number' and borrower_field_value in borrower.personal_number:
+            if borrower_search_field == 'personal_number' and borrower_field_value == borrower.personal_number:
                 search_list_borrowers.append(borrower)
-            else:
-                print("Personal number not found or trying to search other fields.")
 
         if search_list_borrowers:
             return search_list_borrowers
         else:
-            return "not found any book borrowers or parameters are invalid !"
+            return "Not found any book borrowers or parameters are invalid!"
 
     def add_transaction(self, borrower, book):
 
@@ -138,7 +137,7 @@ class Library:
             csv_handler.save_transaction_or_update(self)
             return transaction
         else:
-            return "Book is not available or wrong parameters !"
+            print("Book is not available or wrong parameters !")
 
     def remove_transaction(self, transaction):
         if transaction in self.transactions:
@@ -157,7 +156,7 @@ class Library:
         overdue_transactions = []
 
         for transaction in self.transactions:
-            if transaction.is_overdue():
+            if transaction.is_overdue:
                 overdue_transactions.append(transaction)
 
         if overdue_transactions:

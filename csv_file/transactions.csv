@@ -1,2 +1,3 @@
 borrower,book
 Sandro,"Title:Title1, Author:Author1, isbn:ISBN1, Genre:Genre1, available:False"
+oto,"Title:New Title, Author:Author2, isbn:ISBN2, Genre:Genre2, available:False"
