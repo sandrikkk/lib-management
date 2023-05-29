@@ -41,7 +41,7 @@ def save_borrowers_and_write_in_csv(self):
     book_filepath = "/home/user/Desktop/lib-management/csv_file/borrowers.csv"
 
     with open(book_filepath, mode="w", newline="") as file:
-        borrower_writer= csv.DictWriter(file, fieldnames=fieldnames)
+        borrower_writer = csv.DictWriter(file, fieldnames=fieldnames)
         borrower_writer.writeheader()
 
         for borrower in self.borrowers:
@@ -52,3 +52,15 @@ def save_borrowers_and_write_in_csv(self):
                 "address": borrower.address,
                 "personal_number": borrower.personal_number
             })
+
+
+def remove_borrower_from_csv(rmborrower):
+    rows = []
+    with open('/home/user/Desktop/lib-management/csv_file/borrowers.csv', 'r') as csvfile:
+        csvreader = csv.reader(csvfile)
+        for row in csvreader:
+            if row[0] != rmborrower.name:
+                rows.append(row)
+    with open('/home/user/Desktop/lib-management/csv_file/borrowers.csv', 'w') as csvfile:
+        csvwriter = csv.writer(csvfile)
+        csvwriter.writerows(rows)

@@ -78,7 +78,7 @@ class Library:
 
         if borrower in self.borrowers:
             self.borrowers.remove(borrower)
-            csv_handler.remove_book_from_csv(borrower)
+            csv_handler.remove_borrower_from_csv(borrower)
             print("Book borrower has been deleted successfully !")
         else:
             print("Book borrower not found.")
@@ -112,12 +112,16 @@ class Library:
                 break
         csv_handler.save_borrowers_and_write_in_csv(self)
 
-    def search_borrowers(self, borrower_value, borrower_search):
+    def search_borrowers(self, borrower_search_field, borrower_field_value):
         search_list_borrowers = []
 
         for borrower in self.borrowers:
-            if borrower_value == 'personal_number' and borrower_search in borrower.personal_number:
+            if borrower_search_field == 'personal_number' and borrower_field_value in borrower.personal_number:
                 search_list_borrowers.append(borrower)
-
             else:
                 print("Personal number not found or trying to search other fields.")
+
+        if search_list_borrowers:
+            return search_list_borrowers
+        else:
+            return "not found any book borrowers or parameters are invalid !"
