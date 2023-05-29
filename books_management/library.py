@@ -1,10 +1,14 @@
 import csv_handler
+import datetime
+from transaction_managment.transaction_managment import Transaction
+from books_management.books import Book
 
 
 class Library:
     def __init__(self):
         self.books = []
-        self.borrowers = []
+        self.borrowers_users = []
+        self.transactions = []
 
     def add_books(self, book):
         self.books.append(book)
@@ -69,15 +73,15 @@ class Library:
             return "not found any books or parameters are invalid !"
 
     def add_borrowers(self, borrower):
-        self.borrowers.append(borrower)
+        self.borrowers_users.append(borrower)
         csv_handler.save_books_and_write_in_csv(self)
 
     def remove_borrowers(self, borrower):
-        if not self.borrowers:
+        if not self.borrowers_users:
             print("There are not book borrowers in library !")
 
-        if borrower in self.borrowers:
-            self.borrowers.remove(borrower)
+        if borrower in self.borrowers_users:
+            self.borrowers_users.remove(borrower)
             csv_handler.remove_borrower_from_csv(borrower)
             print("Book borrower has been deleted successfully !")
         else:
@@ -85,19 +89,19 @@ class Library:
 
     def borrower_list(self):
         print("Book list was accessed !")
-        if self.borrowers:
-            for borrower in self.borrowers:
+        if self.borrowers_users:
+            for borrower in self.borrowers_users:
                 print(f"Name: {borrower.name},"
                       f"Last Name: {borrower.last_name}"
                       f"Personal Number: {borrower.personal_number}"
                       )
 
     def update_borrower_details(self, bk, name=None, last_name=None, address=None, number=None, personal_number=None):
-        if not self.borrowers:
+        if not self.borrowers_users:
             print("There are no books borrowers in the library!")
             return
 
-        for borrower in self.borrowers:
+        for borrower in self.borrowers_users:
             if borrower == bk:
                 if name:
                     borrower.name = name
@@ -115,7 +119,7 @@ class Library:
     def search_borrowers(self, borrower_search_field, borrower_field_value):
         search_list_borrowers = []
 
-        for borrower in self.borrowers:
+        for borrower in self.borrowers_users:
             if borrower_search_field == 'personal_number' and borrower_field_value in borrower.personal_number:
                 search_list_borrowers.append(borrower)
             else:
@@ -125,3 +129,40 @@ class Library:
             return search_list_borrowers
         else:
             return "not found any book borrowers or parameters are invalid !"
+
+    def add_transaction(self, borrower, book):
+
+        if book.available:
+            transaction = Transaction(borrower, book)
+            self.transactions.append(transaction)
+            book.available = False
+            return transaction
+        else:
+            return f"Book is not available or wrong parameters !"
+
+    def remove_transaction(self, transaction):
+        if transaction in self.transactions:
+            self.transactions.remove(transaction)
+            print("Transaction has been removed successfully.")
+        else:
+            print("Transaction not found.")
+
+    def transaction_history(self):
+        print("Transaction History:")
+        for transaction in self.transactions:
+            print(transaction)
+
+    def check_overdue_books(self):
+        today = datetime.date.today()
+        overdue_transactions = []
+
+        for transaction in self.transactions:
+            if transaction.is_overdue():
+                overdue_transactions.append(transaction)
+
+        if overdue_transactions:
+            print("Overdue Books:")
+            for transaction in overdue_transactions:
+                print(f"Book: '{transaction.book.title}', Borrower: {transaction.borrower.name}")
+        else:
+            print("No overdue books found.")

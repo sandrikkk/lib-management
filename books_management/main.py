@@ -19,8 +19,6 @@ my_library.update_book(bk=book2, title="New Title")
 print(my_library.books)
 
 # Remove a book
-my_library.remove_books(book1)
-my_library.remove_books(book2)
 
 
 # Search a book
@@ -35,5 +33,6 @@ my_library.borrower_list()
 
 search_results1 = my_library.search_borrowers("personal_number", "010190724141")
 print(*search_results1)
-my_library.remove_borrowers(borrower1)
+transaction1 = my_library.add_transaction(borrower1, book1)
+my_library.transaction_history()
 

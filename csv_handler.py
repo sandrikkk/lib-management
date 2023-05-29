@@ -34,7 +34,7 @@ def remove_book_from_csv(rmbook):
 
 
 def save_borrowers_and_write_in_csv(self):
-    if not self.borrowers:
+    if not self.borrowers_users:
         return
 
     fieldnames = ["name", "last_name", "phone", "address", "personal_number"]
@@ -44,7 +44,7 @@ def save_borrowers_and_write_in_csv(self):
         borrower_writer = csv.DictWriter(file, fieldnames=fieldnames)
         borrower_writer.writeheader()
 
-        for borrower in self.borrowers:
+        for borrower in self.borrowers_users:
             borrower_writer.writerow({
                 "name": borrower.name,
                 "last_name": borrower.last_name,
