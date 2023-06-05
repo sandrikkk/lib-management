@@ -1,42 +1,91 @@
-from books_management.library import Library
 from books_management.books import Book
 from borrower_managment.borower import Borrower
+from transaction_managment.transaction import Transaction
+from base.base import BaseModel
 
-my_library = Library()
-# Add new books
-book1 = Book("Title1", "Author1", "ISBN1", "Genre1")
-my_library.add_books(book1)
+# # Add new books
+book1 = Book(title="Title1", author="Author1", isbn="ISBN1", genre="Genre1")
+book1.save()
+book2 = Book(title="Title2", author="Author2", isbn="ISBN2", genre="Genre2")
+book2.save()
 
-book2 = Book("Title2", "Author2", "ISBN2", "Genre2")
-my_library.add_books(book2)
+# Search for books with a specific title and genre
+criteria = {"title": "Title1", "author": "Author1"}
+results = Book.search(criteria)
 
-book3 = Book("Title3", "Author3", "ISBN3", "Genre3")
-my_library.add_books(book3)
+for book in results:
+    print(book)
 
-# Update book details
-my_library.update_book(bk=book2, title="New Title")
+# Book.remove('aa607996-d0a2-42d6-a18a-cde314c0b6e1')
 
-print(my_library.books)
+# book1.add_books()
+# # # #
+# # #
+# book2 = Book("Title2", "Author2", "ISBN2", "Genre2")
+# book2.add_books()
+#
+# book3 = Book("Title3", "Author3", "ISBN3", "Genre3")
+# book3.add_books()
+#
+# # print(Book.books)
+# book5 = Book("Title334", "Author33", "ISBN331", "Genre31")
+# book5.add_books()
 
-# Remove a book
 
-
-# Search a book
-search_results = my_library.search_book("author", "Author1")
-print(*search_results)
-
+#
+# # Update book details
+# book1.update_book(title="New Title")
+#
+# # print(my_library.books)
+#
+# # Remove a book
+#
+# book1.books_list()
+#
+# # Search a book
+# search_results = Book.search_book("author", "Author3")
+# print(*search_results)
+#
 borrower1 = Borrower("Sandro", "Iashvili", "555555555", "Temqa", "010190724141")
 borrower2 = Borrower("oto", "Iashvili", "555455555", "Temqa", "010190724145")
+borrower1.save()
+borrower2.save()
 
-my_library.add_borrowers(borrower2)
+criteria = {"name": "Sandro", "last_name": "Iashvili"}
+br_results = Borrower.search(criteria)
 
-my_library.add_borrowers(borrower1)
+for result in br_results:
+    print(result)
+# Borrower.remove("927adb9e-2ea7-4ebf-bc87-a928dee12969")
+#
+# # Book.update('939475cd-32b9-4e7a-a898-cf29feaafd4d', {'Title': 'New Title', 'Author': 'New Author'})
+# Borrower.update("bff84464-f857-4475-9167-c2165a3ddc1c", {'name': 'saa324234234234234sd'})
 
-my_library.borrower_list()
-my_library.update_borrower_details(borrower1, name="Sandro")
-my_library.borrower_list()
+#
+# borrower1.update_borrower_details(name="sandro")
+# Borrower.borrower_list()
+# search_results1 = Borrower.search_borrowers("personal_number", "010190724141")
+#
+# print(search_results1)
+#
+# #
+# # search_results1 = my_library.search_borrowers("personal_number", "010190724141")
+# # print(search_results1)
+# transaction1 = Transaction()
+# print(transaction1)
+# ,
+transaction1 = Transaction(borrower1, book1)
+transaction1.save()
+transaction2 = Transaction(borrower2, book1)
+transaction2.save()
 
-search_results1 = my_library.search_borrowers("personal_number", "010190724141")
-print(search_results1)
-transaction1 = my_library.add_transaction(borrower1, book1)
-transaction2 = my_library.add_transaction(borrower2, book2)
+# Transaction.remove("8b6a2d53-962b-4cf0-a906-e44a40bfe780")
+
+
+#
+# transaction1.remove_transaction()
+#
+# Transaction.transaction_history()
+# print(transaction1)
+#
+# # transaction2 = my_library.add_transaction(borrower2, book2)
