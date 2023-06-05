@@ -17,6 +17,28 @@ class BaseModel(ABC):
         else:
             self.id = str(uuid.uuid4())
 
+    @classmethod
+    def read_csv(cls):
+        filepath = cls.get_file_path()
+
+        with open(filepath, mode="r") as file:
+            reader = csv.DictReader(file)
+            items = list(reader)
+
+        return items
+
+    @classmethod
+    def write_csv(cls, items: list[dict]):
+        filepath = cls.get_file_path()
+
+        with open(filepath, 'w') as file:
+            writer = csv.DictWriter(file, fieldnames=cls.fieldnames)
+
+            if os.path.getsize(filepath) == 0:
+                writer.writeheader()
+
+            writer.writerows(items)
+
     @abstractmethod
     def get_attr_dict(self):
         pass
@@ -24,6 +46,11 @@ class BaseModel(ABC):
     @classmethod
     def get_file_path(cls):
         return csv_dirs / cls.filename
+
+    @classmethod
+    @abstractmethod
+    def get_search_criteria(cls):
+        return []
 
     def save(self):
         filepath = self.get_file_path()
@@ -33,58 +60,44 @@ class BaseModel(ABC):
             file.seek(0)
             items = list(reader)
 
+            if not is_unique(self.id, items):
+                raise ValueError(f"{self.__class__.__name__} with ID {self.id} already exists.")
+
             writer = csv.DictWriter(file, fieldnames=self.fieldnames)
 
             if os.path.getsize(filepath) == 0:
                 writer.writeheader()
-
-            if not is_unique(self.id, items):
-                raise ValueError(f"{self.__class__.__name__} with ID {self.id} already exists.")
 
             writer.writerow(self.get_attr_dict())
 
     @classmethod
     def remove(cls, _id):
         rows = []
-        filepath = cls.get_file_path()
-        with open(filepath, 'r') as csvfile:
-            csvreader = csv.reader(csvfile)
-            for row in csvreader:
-                if row[0] != _id:
-                    rows.append(row)
 
-        with open(filepath, 'w') as csvfile:
-            csvwriter = csv.writer(csvfile)
-            csvwriter.writerows(rows)
+        items = cls.read_csv()
+        for row in items:
+            if row["id"] != _id:
+                rows.append(row)
+
+        cls.write_csv(rows)
 
     @classmethod
     def update(cls, _id, updated_fields):
-        filepath = cls.get_file_path()
         updated_row = None
 
-        with open(filepath, mode="r") as file:
-            reader = csv.DictReader(file)
-            items = list(reader)
+        items = cls.read_csv()
 
-            for item in items:
-                if item['ID'] == _id:
-                    updated_row = item
-                    break
+        for item in items:
+            if item['id'] == _id:
+                updated_row = item
+                break
 
         if updated_row is None:
             raise ValueError(f"{cls.__name__} with ID {_id} does not exist.")
 
         updated_row.update(updated_fields)
 
-        with open(filepath, mode="w", newline="") as file:
-            writer = csv.DictWriter(file, fieldnames=cls.fieldnames)
-            writer.writeheader()
-            writer.writerows(items)
-
-    @classmethod
-    @abstractmethod
-    def get_search_criteria(cls):
-        return []
+        cls.write_csv(items)
 
     @classmethod
     def validate_search_fields(cls, criteria: dict):
@@ -100,11 +113,7 @@ class BaseModel(ABC):
     def search(cls, criteria: dict):
         cls.validate_search_fields(criteria)
 
-        filepath = cls.get_file_path()
-
-        with open(filepath, mode="r") as file:
-            reader = csv.DictReader(file)
-            items = list(reader)
+        items = cls.read_csv()
 
         instances = []
 
